@@ -1,0 +1,74 @@
+Exercises – #4
+
+Dependency Injection and stubbing by hand
+
+In the previous exercise, we implemented the TourSchedule class, but we still haven't added
+any logic to book a customer on a certain tour. This is a class of its own, so we will want to
+test it in isolation. At the same time, it will need to have access to at least the API of
+TourSchedule.
+
+The use cases that we need to consider are:
+
+•	We want to be able to book a passenger on a certain tour on a given date.
+•	Trying to book a passenger on a non-existent tour should not work.
+•	A passenger can change their mind and cancel a booking.
+•	Trying to book more passengers than there are seats available should not work.
+
+Main task
+
+1.	Either continue working on your solution from the previous exercise, or grab the solution to Exercise2.
+
+2.	From the TourSchedule class, extract an interface named ITourSchedule. The easiest
+
+3.	way to do this is to press Ctrl+R, I with the caret positioned over the TourSchedule class declaration. Select all public methods to be extracted.
+
+4.	Add a new test fixture named BookingSystemTests to your test project. Create two private fields, one ITourSchedule and your system under test: BookingSystem.
+
+5.	Add a NUnit setup method in BookingSystemTests. In this method, instantiate your SUT and pass the ITourSchedule variable 
+    you created as an argument to the SUT's constructor.
+
+6.	Stub the BookingSystem class and its constructor to make the code compile.
+
+7.	Next, we'll create a handwritten stub for ITourSchedule instead of relying on the actual TourSchedule implementation. In your Test project, 
+    create a new class `TourScheduleStub` that implements ITourSchedule.
+
+8.	Add a public field named Tours of type List<Tour> and return it from the GetToursFor method. You can let the CreateTour method throw a NotImplementedException for now.
+
+9.	Change the private ITourSchedule field in BookingSystemTests to a private TourScheduleStub instead. We must have an actual instance to 
+    access our public variables in an easy way. Declaring it as ITourSchedule at first simply helped with the automatic stubbing.
+
+10.	Instantiate the TourScheduleStub in the BookingSystemTests's setup method.
+
+11.	Write a body for a test called CanCreateBooking. This test will make sure that we get a Booking object back with the correct details. 
+    The Booking class does not exist yet. 
+
+12.	Start by calling your stub object and setting the public member Tours to a new list containing at least one tour with at least one available seat.
+
+13.	Instantiate a new Passenger object (non-existent class so far). Set a FirstName and a LastName property on this object.
+
+14.	Call a method named CreateBooking on your SUT and pass along the name of the tour, the date and the passenger object. 
+    Since we're testing if a booking can be made, make sure you pass along arguments corresponding to a tour available through the stub object.
+
+15.	Call a method named GetBookingsFor that takes a Passenger and returns a List<Booking> instance. Neither Passenger nor Booking exists yet.
+
+16.	Assert that the list contains one Booking instance.
+
+17.	Assert that this Booking instance contains a reference to the correct Tour object and the correct Passenger.
+
+18.	Stub the classes Passenger and Booking, their respective properties and/or fields as well as the methods needed in the SUT.
+
+19.	Make the test pass by writing the implementation for CreateBooking and GetBookingsFor.
+
+20.	Write and get another test to pass which asserts that when trying to book someone on a non-existent tour, an exception gets thrown.
+
+21.	Finally, repeat with a third test that makes sure that when you try to book more passengers than there are seats available, an exception is thrown.
+
+Stretch task
+
+In tests such as CanCreateBooking, we also expect the GetToursFor to be called with the correct DateTime . In your stub, add another list that records the DateTime argument passed
+to GetToursFor every time it's called.
+
+Add assertions to the end of the tests where you expect GetToursFor to be called.
+Assert that it was called the expected number of times, and with the expected argument.
+
+Finally, add a test that lets a passenger cancel their spot on a tour.

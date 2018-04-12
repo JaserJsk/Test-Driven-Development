@@ -1,0 +1,59 @@
+Exercises – #2
+Writing better unit tests 
+
+Main task
+The Kenya Believe It! travel agency sell day-long safaris and need a way to schedule tours. You have been hired to implement this system. You sit down with one of the experts from Kenya Believe It! and the two of you work out the following use cases:
+
+        •  They want an overall tour schedule where they can schedule tours continuously.
+        •  A tour consists of a name, date and the number of available seats.
+        •  Since a tour is a day-long experience, only the date is relevant. We don't have to schedule the exact time.
+        •  Up to three tours can be scheduled on any given date due to a limited number of vehicles.
+        •  It should be possible to retrieve all the tours scheduled on a certain date.
+
+In the main task, you'll be considering and implementing these cases.
+
+Main task
+1.  Create a solution with two projects, one console project called TravelAgency and one class library called TravelAgencyTests.
+2.  Add NUnit from NuGet as in the previous exercise.
+3.  Create a test fixture named TourScheduleTests in your test project and add a test called CanCreateNewTour.
+4.  Declare a variable called sut and instantiate it as a TourSchedule.
+ 
+5.  On your SUT object, call a method named CreateTour which takes three parameters:
+        •  A descriptive name
+        •  The date of the tour
+        •  The available number of seats
+
+For instance, you could call this method in the following way:
+        sut.CreateTour(
+            "New years day safari",
+            new DateTime(2013, 1, 1), 20);
+
+6.  In order to inspect the result, call a method named GetToursFor which takes a DateTime parameter and retrieves a List<Tour>. This list will contain all available tours on a given date.
+7.  Assert that the list contains exactly one item and that this item corresponds to the correct name and number of seats.
+8.  Stub your classes and methods to make sure you have a compiling (although failing) test. You'll have to stub your SUT (TourSchedule) as well as the value class being used (Tour)
+9.  Add the minimal amount of code to make the test pass. Refactor your code when needed.
+10.  Since tours are scheduled on a per-day basis, the tour scheduler should ignore if you pass minutes and seconds in the DateTime to the CreateTour method. Likewise, the resulting value objects shouldn't store anything more than the date (year, month and day). We'll add a test to assert that this works. You can call the test ToursAreScheduledByDateOnly. This means that the following:
+
+        sut.CreateTour(
+                "New years day safari",
+                new DateTime(2013, 1, 1, 10, 15, 0), 20);
+
+    ... Should still let the following call return a list containing this value:
+
+        sut.GetToursFor(new DateTime(2013, 1, 1))
+
+11.  Make sure all your tests pass. Otherwise, make them pass.
+12.  Before writing the next test, you might want to factor out the SUT instantiation to a `SetUp` method.
+13.  In order to check that our GetToursFor is performing as expected, add a test called GetToursForGivenDayOnly. In this test, create a few tours on different dates and assert that GetToursFor only return the ones for the specified date. This test might pass right away, depending on how you implemented it before. If it doesn't pass, add the logic to make it work.
+14.  To consider our sad paths as well, we'll test for errors when something goes wrong. In this instance, scheduling    more than three tours on the same date throw a TourAllocationException. Create a test to assert that an exception of this type is thrown.
+
+Stretch task
+
+If time allows, you can add some additional tests for both happy and sad paths. Consider the following additional use cases:
+        •  To make the exception in the last point of the main task more helpful, it should suggest the next available date where there's a free slot, i.e. less than three scheduled tours.
+        •  The name of the tour is used to identify it within a given day. Trying to schedule a tour with the same name on the same date should throw an exception.
+        •  Also make sure createTour throws an exception when the number of seats is negative. Debate whether to make the exception in this case a TourAllocationException (or ask instructor). Also debate whether 0 should be an acceptable value.
+        •  Is it possible to ask for an unbooked day without getting an exception?
+        •  What happens if someone asks for the list of bookings, then adds to the list? Consider what to do in this case.
+
+Add tests for these cases as well and implement the functionality.
